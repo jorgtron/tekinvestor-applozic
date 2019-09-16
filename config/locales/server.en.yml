@@ -1,0 +1,7 @@
+en:
+  site_settings:
+    applozic_enabled: "Enable Applozic plugin?"
+    applozic_application_key: "Applozic app ID of bot user"
+    applozic_authorization: "Applozic authorization code (Base64Encode of botUserId:password)"
+    applozic_client_group_id: "Applozic client group id"
+    applozic_group_name: "Applozic Discourse group name (case sensitive)"

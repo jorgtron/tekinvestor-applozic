@@ -1,0 +1,11 @@
+plugins:
+  applozic_enabled:
+    default: false
+  applozic_application_key:
+    default: "e7c40cb4976c66623d1c787358cad5ff"
+  applozic_authorization:
+    default: "YWRtaW5ib3Q6bW9uZ29QYXNzb3JkMTIz"
+  applozic_client_group_id:
+    default: "TestGroup"
+  applozic_group_name:
+    default: "insider"
