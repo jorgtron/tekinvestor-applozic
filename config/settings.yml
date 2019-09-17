@@ -9,3 +9,5 @@ plugins:
     default: "TestGroup"
   applozic_group_name:
     default: "insider"
+  applozic_enable_debugger:
+    default: true

@@ -1,6 +1,6 @@
 # name: applozic
 # authors: Muhlis Budi Cahyono (muhlisbc@gmail.com)
-# version: 0.1.1
+# version: 0.1.2
 
 enabled_site_setting :applozic_enabled
 
@@ -26,7 +26,13 @@ after_initialize {
     def sync_users(users)
       modify_users("add", users)
 
-      ex_users = group_users - users
+      _group_users = group_users
+
+      if SiteSetting.applozic_enable_debugger
+        Rails.logger.info("Applozic: group_users #{_group_users}")
+      end
+
+      ex_users = _group_users - users
 
       modify_users("remove", ex_users)
 
@@ -43,6 +49,14 @@ after_initialize {
     end
 
     def modify_users(action, users)
+      if SiteSetting.applozic_enable_debugger
+        Rails.logger.info("Applozic: #{action} #{users}")
+      end
+
+      if users.empty?
+        return
+      end
+
       req_body = {
         "userIds" => users,
         "clientGroupIds" => [client_group_id]

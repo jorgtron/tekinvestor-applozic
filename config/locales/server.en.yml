@@ -5,3 +5,4 @@ en:
     applozic_authorization: "Applozic authorization code (Base64Encode of botUserId:password)"
     applozic_client_group_id: "Applozic client group id"
     applozic_group_name: "Applozic Discourse group name (case sensitive)"
+    applozic_enable_debugger: "Enable debugger?"
