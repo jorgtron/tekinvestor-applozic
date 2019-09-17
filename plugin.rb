@@ -1,6 +1,6 @@
 # name: applozic
 # authors: Muhlis Budi Cahyono (muhlisbc@gmail.com)
-# version: 0.1.0
+# version: 0.1.1
 
 enabled_site_setting :applozic_enabled
 
@@ -30,9 +30,9 @@ after_initialize {
 
       modify_users("remove", ex_users)
 
-      new_users = group_users
+      new_users = group_users.sort
 
-      if users != new_users
+      if users.sort != new_users
         raise "Applozic: fail to sync users"
       end
     end
@@ -87,7 +87,7 @@ after_initialize {
           raise "Applozic: discourse group not found #{group_name}"
         end
 
-        users = group.users.pluck(:id).map(&:to_s)
+        users = group.users.pluck(:username)
 
         Applozic.new.sync_users(users)
       end
@@ -102,13 +102,13 @@ after_initialize {
 
   on(:user_added_to_group) do |user, group, _args|
     if SiteSetting.applozic_enabled && group.name == SiteSetting.applozic_group_name
-      Jobs.enqueue(:applozic_modify_user, action: "add", user: user.id.to_s)
+      Jobs.enqueue(:applozic_modify_user, action: "add", user: user.username)
     end
   end
 
   on(:user_removed_from_group) do |user, group|
     if SiteSetting.applozic_enabled && group.name == SiteSetting.applozic_group_name
-      Jobs.enqueue(:applozic_modify_user, action: "remove", user: user.id.to_s)
+      Jobs.enqueue(:applozic_modify_user, action: "remove", user: user.username)
     end
   end
 }
