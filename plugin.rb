@@ -1,6 +1,6 @@
 # name: applozic
 # authors: Muhlis Budi Cahyono (muhlisbc@gmail.com)
-# version: 0.1.2
+# version: 0.1.3
 
 enabled_site_setting :applozic_enabled
 
@@ -76,6 +76,22 @@ after_initialize {
       end
     end
 
+    def update_user(user)
+      headers = base_headers.dup
+      headers["Of-User-Id"] = user.username
+
+      req_body = {
+        "imageLink" => user.small_avatar_url
+      }
+
+      resp_body = @connection.post(path: "/rest/ws/user/update", body: req_body.to_json, headers: headers).body
+      resp_json = JSON.parse(resp_body)
+
+      if resp_json["status"] == "error"
+        Rails.logger.warn("Applozic: error updating user #{user.username}")
+      end
+    end
+
     def base_headers
       {
         "Application-Key" => application_key,
@@ -104,6 +120,23 @@ after_initialize {
         users = group.users.pluck(:username)
 
         Applozic.new.sync_users(users)
+      end
+    end
+
+    class ApplozicUpdateUsersAvatar < Jobs::Scheduled
+      every 1.day
+
+      def execute(args)
+        if !SiteSetting.applozic_enabled
+          return
+        end
+
+        applozic  = Applozic.new
+        usernames = applozic.group_users
+
+        User.where(username: usernames).each do |user|
+          applozic.update_user(user)
+        end
       end
     end
 
