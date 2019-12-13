@@ -1,6 +1,6 @@
 # name: applozic
 # authors: Muhlis Budi Cahyono (muhlisbc@gmail.com)
-# version: 0.1.3
+# version: 1.0.1
 
 enabled_site_setting :applozic_enabled
 
@@ -102,7 +102,7 @@ after_initialize {
   end
 
   module ::Jobs
-    class ApplozicSyncUsers < Jobs::Scheduled
+    class ApplozicSyncUsers < ::Jobs::Scheduled
       every 30.minutes
 
       def execute(args)
@@ -123,7 +123,7 @@ after_initialize {
       end
     end
 
-    class ApplozicUpdateUsersAvatar < Jobs::Scheduled
+    class ApplozicUpdateUsersAvatar < ::Jobs::Scheduled
       every 1.day
 
       def execute(args)
@@ -140,7 +140,7 @@ after_initialize {
       end
     end
 
-    class ApplozicModifyUser < Jobs::Base
+    class ApplozicModifyUser < ::Jobs::Base
       def execute(args)
         Applozic.new.modify_users(args[:action], [args[:user]])
       end
